@@ -50,10 +50,6 @@ public class DisplayCards extends javax.swing.JFrame {
         return new ImageIcon(scaledAlblum);
     }
     
-    public void updateRecord(){
-        cards.get(index).setQuestion((String)this.cardInfoLabel.getText());
-    }
-
     public static void openfile() {
         fs = FileSystems.getDefault();
         pathToFile = fs.getPath("c:\\data\\flashcards.txt");
@@ -211,6 +207,36 @@ public class DisplayCards extends javax.swing.JFrame {
             File selectedFile = fileChooser.getSelectedFile();
             //test to make sure it works
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            
+             fs = FileSystems.getDefault();
+             pathToFile = fs.getPath(selectedFile.getAbsolutePath());
+             cardClass aCard;
+             String line;
+        try {
+            tempIn = Files.newInputStream(pathToFile);
+            tempReader = new BufferedReader(new InputStreamReader(tempIn));
+            
+            while((line = tempReader.readLine()) !=null){
+                String cardInfo[] = line.split(",");
+                aCard = new cardClass();
+                
+                try {
+                    aCard.setId(Integer.parseInt(cardInfo[0]));
+                    aCard.setQuestion(cardInfo[1]);
+                    aCard.setQuestion(cardInfo[2]);
+                    
+                    cards.add(aCard);
+                } catch (NumberFormatException numberFormatException) {
+                    //do nothing - skip error
+                }
+            }
+            
+            
+        } catch (IOException ex) {
+            System.out.println("Cannot open file " + pathToFile.getFileName());
+            System.exit(0);//die if file does not open
+        }
+        
         }
     }//GEN-LAST:event_fileOpenMenuActionPerformed
 
