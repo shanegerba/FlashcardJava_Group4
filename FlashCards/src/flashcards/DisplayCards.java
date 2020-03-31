@@ -176,25 +176,28 @@ public class DisplayCards extends javax.swing.JFrame {
         cardNumLabel.setText("Card:");
 
         cardPanel.setBackground(new java.awt.Color(255, 255, 255));
-
-        cardInfoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+        cardPanel.setMinimumSize(new java.awt.Dimension(350, 150));
+        cardPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cardInfoLabelMouseClicked(evt);
+                cardPanelMouseClicked(evt);
             }
         });
+
+        cardInfoLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        cardInfoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout cardPanelLayout = new javax.swing.GroupLayout(cardPanel);
         cardPanel.setLayout(cardPanelLayout);
         cardPanelLayout.setHorizontalGroup(
             cardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cardPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cardInfoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                .addComponent(cardInfoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
                 .addContainerGap())
         );
         cardPanelLayout.setVerticalGroup(
             cardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cardPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cardInfoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
                 .addContainerGap())
@@ -221,16 +224,8 @@ public class DisplayCards extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(cardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(83, 83, 83)
-                            .addComponent(cardNumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(sideLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(35, 35, 35)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
+                        .addGap(135, 135, 135)
                         .addComponent(firstButton)
                         .addGap(18, 18, 18)
                         .addComponent(prevButton)
@@ -239,26 +234,34 @@ public class DisplayCards extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(lastButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(randButton)))
-                .addContainerGap(50, Short.MAX_VALUE))
+                        .addComponent(randButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(102, 102, 102)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cardNumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(sideLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(329, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(37, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cardNumLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(78, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cardNumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sideLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(11, 11, 11)
                 .addComponent(cardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(firstButton)
                     .addComponent(prevButton)
                     .addComponent(nextButton)
                     .addComponent(lastButton)
                     .addComponent(randButton))
-                .addGap(18, 18, 18))
+                .addGap(92, 92, 92))
         );
 
         pack();
@@ -297,6 +300,8 @@ public class DisplayCards extends javax.swing.JFrame {
                     //do nothing - skip error
                 }
             }
+            
+            showRecord();
             
             
         } catch (IOException ex) {
@@ -341,11 +346,18 @@ public class DisplayCards extends javax.swing.JFrame {
         showRecord();
     }//GEN-LAST:event_randButtonActionPerformed
 
-    private void cardInfoLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cardInfoLabelMouseClicked
+    private void cardPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cardPanelMouseClicked
         // TODO add your handling code here:
-        this.cardInfoLabel.setText(cards.get(index).getAnswer());
-        this.sideLabel.setText("Side: Answer");
-    }//GEN-LAST:event_cardInfoLabelMouseClicked
+        if(this.cardInfoLabel.getText().equals(cards.get(index).getQuestion())){
+            this.cardInfoLabel.setText(cards.get(index).getAnswer());
+            this.sideLabel.setText("Side: Answer");
+            
+        }
+        else if(this.cardInfoLabel.getText().equals(cards.get(index).getAnswer())){
+            this.cardInfoLabel.setText(cards.get(index).getQuestion());
+            this.sideLabel.setText("Side: Question");
+        }
+    }//GEN-LAST:event_cardPanelMouseClicked
 
     /**
      * @param args the command line arguments
