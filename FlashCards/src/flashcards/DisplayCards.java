@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
@@ -37,6 +38,7 @@ public class DisplayCards extends javax.swing.JFrame {
     static int index = 0, max = cards.size(), current = 0;
     Image openFile;
     Toolkit tools;
+    Random rand = new Random();
 
     /**
      * Creates new form DisplayCards
@@ -108,14 +110,39 @@ public class DisplayCards extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         firstButton.setText("|<");
+        firstButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                firstButtonActionPerformed(evt);
+            }
+        });
 
         prevButton.setText("<");
+        prevButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prevButtonActionPerformed(evt);
+            }
+        });
 
         nextButton.setText(">");
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButtonActionPerformed(evt);
+            }
+        });
 
         lastButton.setText(">|");
+        lastButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lastButtonActionPerformed(evt);
+            }
+        });
 
         randButton.setText("Random");
+        randButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                randButtonActionPerformed(evt);
+            }
+        });
 
         sideLabel.setText("Side:");
 
@@ -245,6 +272,39 @@ public class DisplayCards extends javax.swing.JFrame {
         
         }
     }//GEN-LAST:event_fileOpenMenuActionPerformed
+
+    private void firstButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstButtonActionPerformed
+        // TODO add your handling code here:
+        index = 0;
+        showRecord();
+    }//GEN-LAST:event_firstButtonActionPerformed
+
+    private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
+        // TODO add your handling code here:
+        if (index > 0) {
+            index--;
+        showRecord();
+        }
+    }//GEN-LAST:event_prevButtonActionPerformed
+
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        // TODO add your handling code here:
+        if (index < cards.size()-1) {
+            index++;
+        showRecord();
+        }
+    }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void lastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastButtonActionPerformed
+        // TODO add your handling code here:
+        index = cards.size()-1;
+        showRecord();
+    }//GEN-LAST:event_lastButtonActionPerformed
+
+    private void randButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randButtonActionPerformed
+        // TODO add your handling code here:
+        index = rand.nextInt(cards.size()-1);
+    }//GEN-LAST:event_randButtonActionPerformed
 
     /**
      * @param args the command line arguments
