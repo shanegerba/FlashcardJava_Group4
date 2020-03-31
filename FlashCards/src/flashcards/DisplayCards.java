@@ -19,6 +19,8 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
@@ -35,7 +37,7 @@ public class DisplayCards extends javax.swing.JFrame {
     static BasicFileAttributes attributes;
     static BufferedReader tempReader; // reads the file one line at a time, caches upcoming lines
     static InputStream tempIn = null;
-    static int index = 0, max = cards.size(), current = 0;
+    static int index = 0, current = 0;
     Image openFile;
     Toolkit tools;
     Random rand = new Random();
@@ -63,21 +65,46 @@ public class DisplayCards extends javax.swing.JFrame {
             System.out.println("Cannot open file " + pathToFile.getFileName());
             System.exit(0);//die if file does not open
         }
+         cardClass aCard;
+         String line;
+        try {
+            while((line = tempReader.readLine()) !=null){
+                String cardInfo[] = line.split(",");
+                aCard = new cardClass();
+                
+                try {
+                    aCard.setId(Integer.parseInt(cardInfo[0]));
+                    aCard.setQuestion(cardInfo[1]);
+                    aCard.setAnswer(cardInfo[2]);
+                    
+                    cards.add(aCard);
+                    
+                } catch (NumberFormatException numberFormatException) {
+                    //do nothing - skip error
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(DisplayCards.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void showRecord(){
-       this.cardNumLabel.setText("Card #" + cards.get(index).getId() + "out of " + max);
+       this.cardNumLabel.setText("Card #" + cards.get(index).getId() + " out of " + cards.size());
        this.cardInfoLabel.setText(cards.get(index).getQuestion());
+       this.sideLabel.setText("Side: Question");
     }
 
     public DisplayCards() {
         initComponents();
         tools = Toolkit.getDefaultToolkit();
+        
+        
         this.setTitle("Flashcards Program");
         loadImages();
-
         //put a file open picture for the file open button
         fileOpenMenu.setIcon(getImage(openFile));
+        
+        openfile();
 
         showRecord();
     }
@@ -149,6 +176,12 @@ public class DisplayCards extends javax.swing.JFrame {
         cardNumLabel.setText("Card:");
 
         cardPanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        cardInfoLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cardInfoLabelMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout cardPanelLayout = new javax.swing.GroupLayout(cardPanel);
         cardPanel.setLayout(cardPanelLayout);
@@ -245,6 +278,7 @@ public class DisplayCards extends javax.swing.JFrame {
              pathToFile = fs.getPath(selectedFile.getAbsolutePath());
              cardClass aCard;
              String line;
+             cards.removeAll(cards);// clear out previous cards from list
         try {
             tempIn = Files.newInputStream(pathToFile);
             tempReader = new BufferedReader(new InputStreamReader(tempIn));
@@ -256,7 +290,7 @@ public class DisplayCards extends javax.swing.JFrame {
                 try {
                     aCard.setId(Integer.parseInt(cardInfo[0]));
                     aCard.setQuestion(cardInfo[1]);
-                    aCard.setQuestion(cardInfo[2]);
+                    aCard.setAnswer(cardInfo[2]);
                     
                     cards.add(aCard);
                 } catch (NumberFormatException numberFormatException) {
@@ -304,7 +338,14 @@ public class DisplayCards extends javax.swing.JFrame {
     private void randButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randButtonActionPerformed
         // TODO add your handling code here:
         index = rand.nextInt(cards.size()-1);
+        showRecord();
     }//GEN-LAST:event_randButtonActionPerformed
+
+    private void cardInfoLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cardInfoLabelMouseClicked
+        // TODO add your handling code here:
+        this.cardInfoLabel.setText(cards.get(index).getAnswer());
+        this.sideLabel.setText("Side: Answer");
+    }//GEN-LAST:event_cardInfoLabelMouseClicked
 
     /**
      * @param args the command line arguments
