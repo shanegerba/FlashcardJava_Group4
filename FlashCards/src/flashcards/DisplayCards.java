@@ -34,7 +34,7 @@ public class DisplayCards extends javax.swing.JFrame {
     static BasicFileAttributes attributes;
     static BufferedReader tempReader; // reads the file one line at a time, caches upcoming lines
     static InputStream tempIn = null;
-    static int index = 0;
+    static int index = 0, max = cards.size(), current = 0;
     Image openFile;
     Toolkit tools;
 
@@ -62,6 +62,11 @@ public class DisplayCards extends javax.swing.JFrame {
             System.exit(0);//die if file does not open
         }
     }
+    
+    public void showRecord(){
+       this.cardNumLabel.setText("Card #" + cards.get(index).getId() + "out of " + max);
+       this.cardInfoLabel.setText(cards.get(index).getQuestion());
+    }
 
     public DisplayCards() {
         initComponents();
@@ -72,6 +77,7 @@ public class DisplayCards extends javax.swing.JFrame {
         //put a file open picture for the file open button
         fileOpenMenu.setIcon(getImage(openFile));
 
+        showRecord();
     }
 
     /**
