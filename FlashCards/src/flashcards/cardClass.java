@@ -11,13 +11,13 @@ package flashcards;
  */
 public class cardClass {
     private int id;
-    private int question;
-    private int answer;
+    private String question;
+    private String answer;
 
     public cardClass() {
     }
 
-    public cardClass(int id, int question, int answer) {
+    public cardClass(int id, String question, String answer) {
         this.id = id;
         this.question = question;
         this.answer = answer;
@@ -31,19 +31,19 @@ public class cardClass {
         this.id = id;
     }
 
-    public int getQuestion() {
+    public String getQuestion() {
         return question;
     }
 
-    public void setQuestion(int question) {
+    public void setQuestion(String question) {
         this.question = question;
     }
 
-    public int getAnswer() {
+    public String getAnswer() {
         return answer;
     }
 
-    public void setAnswer(int answer) {
+    public void setAnswer(String answer) {
         this.answer = answer;
     }
 
