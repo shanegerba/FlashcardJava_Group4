@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +38,7 @@ public class DisplayCards extends javax.swing.JFrame {
     static BasicFileAttributes attributes;
     static BufferedReader tempReader; // reads the file one line at a time, caches upcoming lines
     static InputStream tempIn = null;
-    static int index = 0, current = 0;
+    static int index = 0, current = 0,Cardnum = 1;
     Image openFile;
     Toolkit tools;
     Random rand = new Random();
@@ -89,7 +90,7 @@ public class DisplayCards extends javax.swing.JFrame {
     }
     
     public void showRecord(){
-       this.cardNumLabel.setText("Card #" + cards.get(index).getId() + " out of " + cards.size());
+       this.cardNumLabel.setText("Card #" + Cardnum + " out of " + cards.size());
        this.cardInfoLabel.setText(cards.get(index).getQuestion());
        this.sideLabel.setText("Side: Question");
     }
@@ -315,6 +316,7 @@ public class DisplayCards extends javax.swing.JFrame {
     private void firstButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstButtonActionPerformed
         // TODO add your handling code here:
         index = 0;
+        Cardnum =1;
         showRecord();
     }//GEN-LAST:event_firstButtonActionPerformed
 
@@ -322,6 +324,7 @@ public class DisplayCards extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (index > 0) {
             index--;
+            Cardnum--;
         showRecord();
         }
     }//GEN-LAST:event_prevButtonActionPerformed
@@ -330,6 +333,7 @@ public class DisplayCards extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (index < cards.size()-1) {
             index++;
+            Cardnum++;
         showRecord();
         }
     }//GEN-LAST:event_nextButtonActionPerformed
@@ -337,12 +341,14 @@ public class DisplayCards extends javax.swing.JFrame {
     private void lastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastButtonActionPerformed
         // TODO add your handling code here:
         index = cards.size()-1;
+        Cardnum = cards.size();
         showRecord();
     }//GEN-LAST:event_lastButtonActionPerformed
 
     private void randButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randButtonActionPerformed
         // TODO add your handling code here:
-        index = rand.nextInt(cards.size()-1);
+        Collections.shuffle(cards);
+        //index = rand.nextInt(cards.size()-1);
         showRecord();
     }//GEN-LAST:event_randButtonActionPerformed
 
