@@ -1,0 +1,11 @@
+id,question,answer
+1,How many legs does a spider have?,Eight
+2,What is the name of the toy cowboy in Toy Story?,Woody
+3,What is the color of an emerald?,Green
+4,What is something you hit with a hammer?,A nail
+5,What’s the name of a place you go to see lots of animals?,The zoo
+6,Whose nose grew longer every time he lied?,Pinocchio
+7,What is the name of the fairy in Peter Pan?,Tinkerbell
+8,If you freeze water, what do you get?,Ice
+9,What colors are the stars on the American flag?,White
+10,In the nursery rhyme,Jack and Jill,What do Jack and Jill go up the hill to fetch?,A pail of water
