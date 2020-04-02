@@ -41,7 +41,7 @@ public class DisplayCards extends javax.swing.JFrame {
     static BasicFileAttributes attributes;
     static BufferedReader tempReader; // reads the file one line at a time, caches upcoming lines
     static InputStream tempIn = null;
-    static int index = 0, current = 0,Cardnum = 1;
+    static int index = 0, current = 0, Cardnum = 1;
     Image openFile;
     Toolkit tools;
     Random rand = new Random();
@@ -57,7 +57,7 @@ public class DisplayCards extends javax.swing.JFrame {
         Image scaledAlblum = theImage.getScaledInstance(20, 20, Image.SCALE_FAST);
         return new ImageIcon(scaledAlblum);
     }
-    
+
     public static void openfile() {
         fs = FileSystems.getDefault();
         pathToFile = fs.getPath("c:\\data\\flashcards.txt");
@@ -69,20 +69,20 @@ public class DisplayCards extends javax.swing.JFrame {
             System.out.println("Cannot open file " + pathToFile.getFileName());
             System.exit(0);//die if file does not open
         }
-         cardClass aCard;
-         String line;
+        cardClass aCard;
+        String line;
         try {
-            while((line = tempReader.readLine()) !=null){
+            while ((line = tempReader.readLine()) != null) {
                 String cardInfo[] = line.split(",");
                 aCard = new cardClass();
-                
+
                 try {
                     aCard.setId(Integer.parseInt(cardInfo[0]));
                     aCard.setQuestion(cardInfo[1]);
                     aCard.setAnswer(cardInfo[2]);
-                    
+
                     cards.add(aCard);
-                    
+
                 } catch (NumberFormatException numberFormatException) {
                     //do nothing - skip error
                 }
@@ -91,28 +91,49 @@ public class DisplayCards extends javax.swing.JFrame {
             Logger.getLogger(DisplayCards.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void showRecord(){
-       this.cardNumLabel.setText("Card #" + Cardnum + " out of " + cards.size());
-       this.cardInfoLabel.setText(cards.get(index).getQuestion());
-       this.sideLabel.setText("Side: Question");
+
+    public void showRecord() {
+        this.cardNumLabel.setText("Card #" + Cardnum + " out of " + cards.size());
+        this.cardInfoLabel.setText(cards.get(index).getQuestion());
+        this.sideLabel.setText("Side: Question");
     }
 
     public DisplayCards() {
         initComponents();
         tools = Toolkit.getDefaultToolkit();
-        
-        
+
         this.setTitle("Flashcards Program");
         loadImages();
         //put a file open picture for the file open button
         fileOpenMenu.setIcon(getImage(openFile));
-        
+
         openfile();
 
         showRecord();
+
+        // drawStuff();
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g); //To change body of generated methods, choose Tools | Templates.
+         int y = 22;
+        int x = 22;
+        g = this.cardPanel.getGraphics();
+        g.setColor(Color.WHITE);
+        //g.fillRect(0, 0, this.cardPanel.getWidth(), this.cardPanel.getHeight());
+        g.setColor(Color.blue);
+        for (int i = 0; i < 8; i++) {
+            g.drawLine(0, y, this.cardPanel.getWidth(), x);
+            x += 20;
+            y += 20;
+        }
+        g.setColor(Color.red);
+        g.drawLine(0, 22, this.cardPanel.getWidth(), 22);
     }
     
+    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -180,7 +201,9 @@ public class DisplayCards extends javax.swing.JFrame {
         cardNumLabel.setText("Card:");
 
         cardPanel.setBackground(new java.awt.Color(255, 255, 255));
+        cardPanel.setMaximumSize(new java.awt.Dimension(350, 150));
         cardPanel.setMinimumSize(new java.awt.Dimension(350, 150));
+        cardPanel.setPreferredSize(new java.awt.Dimension(350, 150));
         cardPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 cardPanelMouseClicked(evt);
@@ -197,14 +220,14 @@ public class DisplayCards extends javax.swing.JFrame {
             .addGroup(cardPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cardInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(3, Short.MAX_VALUE))
         );
         cardPanelLayout.setVerticalGroup(
             cardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cardPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cardInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addComponent(cardInfoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                .addGap(49, 49, 49))
         );
 
         fileMenu.setText("File");
@@ -280,47 +303,49 @@ public class DisplayCards extends javax.swing.JFrame {
             File selectedFile = fileChooser.getSelectedFile();
             //test to make sure it works
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-            
-             fs = FileSystems.getDefault();
-             pathToFile = fs.getPath(selectedFile.getAbsolutePath());
-             cardClass aCard;
-             String line;
-             cards.removeAll(cards);// clear out previous cards from list
-        try {
-            tempIn = Files.newInputStream(pathToFile);
-            tempReader = new BufferedReader(new InputStreamReader(tempIn));
-            
-            while((line = tempReader.readLine()) !=null){
-                String cardInfo[] = line.split(",");
-                aCard = new cardClass();
-                
-                try {
-                    aCard.setId(Integer.parseInt(cardInfo[0]));
-                    aCard.setQuestion(cardInfo[1]);
-                    aCard.setAnswer(cardInfo[2]);
-                    
-                    cards.add(aCard);
-                } catch (NumberFormatException numberFormatException) {
-                    //do nothing - skip error
+
+            fs = FileSystems.getDefault();
+            pathToFile = fs.getPath(selectedFile.getAbsolutePath());
+            cardClass aCard;
+            String line;
+            cards.removeAll(cards);// clear out previous cards from list
+            try {
+                tempIn = Files.newInputStream(pathToFile);
+                tempReader = new BufferedReader(new InputStreamReader(tempIn));
+
+                while ((line = tempReader.readLine()) != null) {
+                    String cardInfo[] = line.split(",");
+                    aCard = new cardClass();
+
+                    try {
+                        aCard.setId(Integer.parseInt(cardInfo[0]));
+                        aCard.setQuestion(cardInfo[1]);
+                        aCard.setAnswer(cardInfo[2]);
+
+                        cards.add(aCard);
+                    } catch (NumberFormatException numberFormatException) {
+                        //do nothing - skip error
+                    }
                 }
+
+                showRecord();
+                repaint();
+
+            } catch (IOException ex) {
+                System.out.println("Cannot open file " + pathToFile.getFileName());
+                System.exit(0);//die if file does not open
             }
-            
-            showRecord();
-            
-            
-        } catch (IOException ex) {
-            System.out.println("Cannot open file " + pathToFile.getFileName());
-            System.exit(0);//die if file does not open
-        }
-        
+
         }
     }//GEN-LAST:event_fileOpenMenuActionPerformed
 
     private void firstButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstButtonActionPerformed
         // TODO add your handling code here:
+     
         index = 0;
-        Cardnum =1;
+        Cardnum = 1;
         showRecord();
+        repaint();
     }//GEN-LAST:event_firstButtonActionPerformed
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
@@ -328,24 +353,27 @@ public class DisplayCards extends javax.swing.JFrame {
         if (index > 0) {
             index--;
             Cardnum--;
-        showRecord();
+            showRecord();
+            repaint();
         }
     }//GEN-LAST:event_prevButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         // TODO add your handling code here:
-        if (index < cards.size()-1) {
+        if (index < cards.size() - 1) {
             index++;
             Cardnum++;
-        showRecord();
+            showRecord();
+            repaint();
         }
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void lastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastButtonActionPerformed
         // TODO add your handling code here:
-        index = cards.size()-1;
+        index = cards.size() - 1;
         Cardnum = cards.size();
         showRecord();
+        repaint();
     }//GEN-LAST:event_lastButtonActionPerformed
 
     private void randButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randButtonActionPerformed
@@ -353,19 +381,20 @@ public class DisplayCards extends javax.swing.JFrame {
         Collections.shuffle(cards);
         //index = rand.nextInt(cards.size()-1);
         showRecord();
+        repaint();
     }//GEN-LAST:event_randButtonActionPerformed
 
     private void cardPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cardPanelMouseClicked
         // TODO add your handling code here:
-        if(this.cardInfoLabel.getText().equals(cards.get(index).getQuestion())){
+        if (this.cardInfoLabel.getText().equals(cards.get(index).getQuestion())) {
             this.cardInfoLabel.setText(cards.get(index).getAnswer());
             this.sideLabel.setText("Side: Answer");
-            
-        }
-        else if(this.cardInfoLabel.getText().equals(cards.get(index).getAnswer())){
+
+        } else if (this.cardInfoLabel.getText().equals(cards.get(index).getAnswer())) {
             this.cardInfoLabel.setText(cards.get(index).getQuestion());
             this.sideLabel.setText("Side: Question");
         }
+        repaint();
     }//GEN-LAST:event_cardPanelMouseClicked
 
     /**
