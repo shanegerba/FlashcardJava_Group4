@@ -96,6 +96,7 @@ public class DisplayCards extends javax.swing.JFrame {
         this.cardNumLabel.setText("Card #" + Cardnum + " out of " + cards.size());
         this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>");
         this.sideLabel.setText("Side: Question");
+        repaint();
     }
 
     public DisplayCards() {
@@ -213,6 +214,7 @@ public class DisplayCards extends javax.swing.JFrame {
 
         cardInfoLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         cardInfoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cardInfoLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         javax.swing.GroupLayout cardPanelLayout = new javax.swing.GroupLayout(cardPanel);
         cardPanel.setLayout(cardPanelLayout);
