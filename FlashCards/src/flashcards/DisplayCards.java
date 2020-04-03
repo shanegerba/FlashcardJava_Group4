@@ -94,7 +94,7 @@ public class DisplayCards extends javax.swing.JFrame {
 
     public void showRecord() {
         this.cardNumLabel.setText("Card #" + Cardnum + " out of " + cards.size());
-        this.cardInfoLabel.setText(cards.get(index).getQuestion());
+        this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>");
         this.sideLabel.setText("Side: Question");
     }
 
@@ -387,12 +387,12 @@ public class DisplayCards extends javax.swing.JFrame {
 
     private void cardPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cardPanelMouseClicked
         // TODO add your handling code here:
-        if (this.cardInfoLabel.getText().equals(cards.get(index).getQuestion())) {
-            this.cardInfoLabel.setText(cards.get(index).getAnswer());
+        if ((this.cardInfoLabel.getText()).equals("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>")) {
+            this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getAnswer() + "</p></body></html>");
             this.sideLabel.setText("Side: Answer");
 
-        } else if (this.cardInfoLabel.getText().equals(cards.get(index).getAnswer())) {
-            this.cardInfoLabel.setText(cards.get(index).getQuestion());
+        } else if (this.cardInfoLabel.getText().equals("<html><body><p>" + cards.get(index).getAnswer() + "</p></body></html>")) {
+            this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>");
             this.sideLabel.setText("Side: Question");
         }
         repaint();
