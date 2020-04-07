@@ -212,6 +212,9 @@
                   </Border>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="questionTextAreaMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -277,6 +280,9 @@
                   </Border>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="answerTextAreaMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

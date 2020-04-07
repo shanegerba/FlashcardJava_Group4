@@ -53,8 +53,8 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
     public void newCard(){
         cardClass newCard = new cardClass();
         newCard.setId(index + 1);
-        newCard.setQuestion("Question text goes here");
-        newCard.setAnswer("Answer text goes here");
+        newCard.setQuestion("");
+        newCard.setAnswer("");
         cards.add(newCard);
         showCard();
     }
@@ -183,6 +183,11 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         questionTextArea.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
         questionTextArea.setRows(5);
         questionTextArea.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        questionTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                questionTextAreaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(questionTextArea);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -212,6 +217,11 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         answerTextArea.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
         answerTextArea.setRows(5);
         answerTextArea.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        answerTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                answerTextAreaMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(answerTextArea);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -463,12 +473,28 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
                         //do nothing - skip error
                     }
                 }
+                showCard();
              } catch (IOException ex) {
                 System.out.println("Cannot open file " + pathToFile.getFileName());
                 System.exit(0);//die if file does not open
             }
         }
     }//GEN-LAST:event_openMenuActionPerformed
+
+    private void questionTextAreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_questionTextAreaMouseClicked
+        // TODO add your handling code here:
+        if(questionTextArea.getText().equals("Question text goes here")){
+            questionTextArea.setText("");
+        }
+      
+    }//GEN-LAST:event_questionTextAreaMouseClicked
+
+    private void answerTextAreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_answerTextAreaMouseClicked
+        // TODO add your handling code here:
+        if(answerTextArea.getText().equals("Answer text goes here")){
+            answerTextArea.setText("");
+        }
+    }//GEN-LAST:event_answerTextAreaMouseClicked
 
     /**
      * @param args the command line arguments
