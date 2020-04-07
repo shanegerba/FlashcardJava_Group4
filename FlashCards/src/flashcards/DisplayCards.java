@@ -259,6 +259,12 @@ public class DisplayCards extends javax.swing.JFrame {
         });
 
         showRevisitsCheck.setText("Show only Revisits");
+        showRevisitsCheck.setEnabled(false);
+        showRevisitsCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showRevisitsCheckActionPerformed(evt);
+            }
+        });
 
         fileMenu.setText("File");
 
@@ -397,7 +403,7 @@ public class DisplayCards extends javax.swing.JFrame {
                     break;
                 }
             }
-            Cardnum = Cardnum - change;// not gonna lie I feel pretty smart about his one ;)
+            Cardnum = lowRevisit + 1;
             showRecord();
             repaint();
             
@@ -459,7 +465,7 @@ public class DisplayCards extends javax.swing.JFrame {
                     break;
                 }
             }
-            Cardnum = Cardnum + change +1;// not gonna lie I feel pretty smart about his one ;)
+            Cardnum = highRevisit + 1;
             showRecord();
             repaint();
         }
@@ -474,6 +480,7 @@ public class DisplayCards extends javax.swing.JFrame {
         repaint();
         }
         else if(showRevisitsCheck.isSelected() == true){
+            do{
             Collections.shuffle(cards);
             for(int i = 0; i < cards.size(); i++){
             if(cards.get(i).getRevisit() == true){
@@ -488,6 +495,7 @@ public class DisplayCards extends javax.swing.JFrame {
         }
         showRecord();
         repaint();
+            }while(cards.get(index).getRevisit() == false);//keeps on shuffling until it hits a valid card
         }
     }//GEN-LAST:event_randButtonActionPerformed
 
@@ -519,11 +527,28 @@ public class DisplayCards extends javax.swing.JFrame {
 //                }
 //            }
 //        }
-
+        int valid = 0;//make sure at least one card can be revisited
         if (revisitCheck.isSelected()) {
             cards.get(index).setRevisit(true);
+              valid++;
         } else if (!revisitCheck.isSelected()) {
             cards.get(index).setRevisit(false);
+            valid--;
+        }
+        
+        if(valid > 0){
+            showRevisitsCheck.setEnabled(true);
+        }
+        else if(valid == 0){
+            showRevisitsCheck.setEnabled(false);
+        }
+        
+        //make sure user cannot remove last valid card while showing only revisits
+        if(valid == 1 && showRevisitsCheck.isSelected()){
+            revisitCheck.setEnabled(false);
+        }
+        else if(valid > 1 || !showRevisitsCheck.isSelected()){
+            revisitCheck.setEnabled(true);
         }
         
         for(int i = 0; i < cards.size(); i++){
@@ -539,6 +564,13 @@ public class DisplayCards extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_revisitCheckActionPerformed
+
+    private void showRevisitsCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showRevisitsCheckActionPerformed
+        // TODO add your handling code here:
+        if(!showRevisitsCheck.isSelected()){
+            revisitCheck.setEnabled(true);
+        }
+    }//GEN-LAST:event_showRevisitsCheckActionPerformed
 
     /**
      * @param args the command line arguments

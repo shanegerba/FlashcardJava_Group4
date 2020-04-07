@@ -5,12 +5,11 @@
  */
 package flashcards;
 
-import static flashcards.DisplayCards.cards;
 import static flashcards.DisplayCards.fs;
-import static flashcards.DisplayCards.pathToFile;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -88,31 +87,6 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         
     }
     
-    public void writeToFile() {
-        String fileName = "c:\\data\\flashcardsWriteTest.txt";
-        String outputLine = "";
-        File outFile = new File(fileName);
-        
-        try {
-            FileWriter companyWrite = new FileWriter(outFile);
-            
-            for (int x = 0; x < cards.size(); x++) {
-
-                //%d = int
-                //%f = float or double
-                //%s = string
-                outputLine = String.format("%d,%s,%s\n", cards.get(x).getId(), cards.get(x).getQuestion(), cards.get(x).getAnswer());
-                companyWrite.write(outputLine);
-            }//end of for
-            companyWrite.flush();
-            companyWrite.close();
-        } catch (IOException ex) {
-            //   Logger.getLogger(CompanyGUI.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Cannot write company\n" + ex.getMessage(),
-                    "FileIO Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     /**
      * Creates new form WriteFlashCardsGUI
      */
@@ -372,9 +346,10 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
 
     private void saveMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuActionPerformed
         // TODO add your handling code here:
-           try{
+        updateCard();
+             try{
             
-            String fileName = questionTextArea.getText() + ".txt"; //sets default file name to a question
+            String fileName = cards.get(index).getQuestion() + ".txt";
             File saveFile = new File(fileName);
             
             //jfile chooser
@@ -385,9 +360,33 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
             if(button == JFileChooser.APPROVE_OPTION){
                 //save
                 fileName = save.getSelectedFile().toString();
-                FileOutputStream txtSave = new FileOutputStream(fileName);
+                FileOutputStream qrSave = new FileOutputStream(fileName);
                 
-                txtSave.close();
+                //MatrixToImageWriter.writeToStream(QRmatrix, "gif", qrSave);
+                //QRimage = tools.createImage(QRBuffered.getSource());
+                String outputLine = "";
+        File outFile = new File(fileName);
+        
+        try {
+            FileWriter write = new FileWriter(outFile);
+            
+            for (int x = 0; x < cards.size(); x++) {
+
+                //%d = int
+                //%f = float or double
+                //%s = string
+                outputLine = String.format("%d,%s,%s\n", cards.get(x).getId(), cards.get(x).getQuestion(), cards.get(x).getAnswer());
+                write.write(outputLine);
+            }//end of for
+            write.flush();
+            write.close();
+        } catch (IOException ex) {
+            //   Logger.getLogger(CompanyGUI.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Cannot write company\n" + ex.getMessage(),
+                    "FileIO Error", JOptionPane.ERROR_MESSAGE);
+        }
+                
+                qrSave.close();
             }
             else{
                 //cancel
@@ -398,6 +397,8 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         catch(Exception ex){
             JOptionPane.showMessageDialog(this, "QR save failed" + ex.toString());
         }
+       
+        
     }//GEN-LAST:event_saveMenuActionPerformed
 
     private void firstBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstBtnActionPerformed
@@ -422,7 +423,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        writeToFile();
+        //writeToFile();
     }//GEN-LAST:event_formWindowClosing
 
     private void prevBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevBtnActionPerformed
