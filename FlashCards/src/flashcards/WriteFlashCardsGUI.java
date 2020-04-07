@@ -5,10 +5,18 @@
  */
 package flashcards;
 
+import static flashcards.DisplayCards.fs;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,7 +27,20 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
     
     private static ArrayList<cardClass> cards = new ArrayList<>();
     private static int index = 0;
+     Image openFile;
+     Image saveFile;
+     Toolkit tools;
+     static Path pathToFile; //access to the file
     
+     public void loadImages() {
+        openFile = tools.getImage(getClass().getResource("openFile.png"));
+        saveFile = tools.getImage(getClass().getResource("saveFile.jpg"));
+     }
+     
+     public ImageIcon getImage(Image theImage) {
+        Image scaledAlblum = theImage.getScaledInstance(20, 20, Image.SCALE_FAST);
+        return new ImageIcon(scaledAlblum);
+    }
     
     public void newCard(){
         cardClass newCard = new cardClass();
@@ -89,6 +110,15 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
      */
     public WriteFlashCardsGUI() {
         initComponents();
+        
+          tools = Toolkit.getDefaultToolkit();
+
+        this.setTitle("Flashcards Program");
+        loadImages();
+        //put a file open picture for the file open button
+        openMenu.setIcon(getImage(openFile));
+        saveMenu.setIcon(getImage(saveFile));
+        
         exampleCard();
         showCard();
     }
@@ -120,8 +150,8 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        saveMenu = new javax.swing.JMenuItem();
+        openMenu = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -231,16 +261,21 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
-        jMenuItem1.setText("Save");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        saveMenu.setText("Save");
+        saveMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                saveMenuActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(saveMenu);
 
-        jMenuItem2.setText("Open");
-        jMenu1.add(jMenuItem2);
+        openMenu.setText("Open");
+        openMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMenuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(openMenu);
 
         jMenuBar1.add(jMenu1);
 
@@ -317,9 +352,35 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void saveMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+           try{
+            
+            String fileName = questionTextArea.getText() + ".txt"; //sets default file name to a question
+            File saveFile = new File(fileName);
+            
+            //jfile chooser
+            JFileChooser save = new JFileChooser();
+            save.setSelectedFile(saveFile); //puts file name in the box
+            
+            int button = save.showSaveDialog(this); // hold onto which button was pressed
+            if(button == JFileChooser.APPROVE_OPTION){
+                //save
+                fileName = save.getSelectedFile().toString();
+                FileOutputStream txtSave = new FileOutputStream(fileName);
+                
+                txtSave.close();
+            }
+            else{
+                //cancel
+            }
+            
+            
+        }
+        catch(Exception ex){
+            JOptionPane.showMessageDialog(this, "QR save failed" + ex.toString());
+        }
+    }//GEN-LAST:event_saveMenuActionPerformed
 
     private void firstBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstBtnActionPerformed
         // TODO add your handling code here:
@@ -360,6 +421,21 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         index = cards.size() - 1;
         showCard();
     }//GEN-LAST:event_lastButtonActionPerformed
+
+    private void openMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuActionPerformed
+        // TODO add your handling code here:
+         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));//set initial directory to users home directory
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            //test to make sure it works
+            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+
+            fs = FileSystems.getDefault();
+            pathToFile = fs.getPath(selectedFile.getAbsolutePath());
+        }
+    }//GEN-LAST:event_openMenuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -407,15 +483,15 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton lastButton;
     private javax.swing.JButton nextBtn;
+    private javax.swing.JMenuItem openMenu;
     private javax.swing.JButton prevBtn;
     private javax.swing.JTextArea questionTextArea;
+    private javax.swing.JMenuItem saveMenu;
     // End of variables declaration//GEN-END:variables
 }
