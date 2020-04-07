@@ -35,13 +35,14 @@ import javax.swing.JPanel;
 public class DisplayCards extends javax.swing.JFrame {
 
     static ArrayList<cardClass> cards = new ArrayList<>();
+    static ArrayList<cardClass> revisits = new ArrayList<>();
     static FileSystem fs;
     static Path pathToFile; //access to the file
     static File theFile; //file operations like create, delete
     static BasicFileAttributes attributes;
     static BufferedReader tempReader; // reads the file one line at a time, caches upcoming lines
     static InputStream tempIn = null;
-    static int index = 0, current = 0, Cardnum = 1;
+    static int index = 0, current = 0, Cardnum = 1, highRevisit  = cards.size()-1, lowRevisit = 0;
     Image openFile;
     Toolkit tools;
     Random rand = new Random();
@@ -93,12 +94,29 @@ public class DisplayCards extends javax.swing.JFrame {
     }
 
     public void showRecord() {
-        this.cardNumLabel.setText("Card #" + Cardnum + " out of " + cards.size());
-        this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>");
-        this.sideLabel.setText("Side: Question");
-        repaint();
-    }
 
+        if (showRevisitsCheck.isSelected() == true && cards.get(index).getRevisit() == true) {
+            this.cardNumLabel.setText("Card #" + Cardnum + " out of " + cards.size());
+            this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>");
+            this.sideLabel.setText("Side: Question");
+            if (cards.get(index).getRevisit() == true) {
+                this.revisitCheck.setSelected(true);
+            } else if (cards.get(index).getRevisit() == false) {
+                this.revisitCheck.setSelected(false);
+            }
+            repaint();
+        } else if (showRevisitsCheck.isSelected() == false) {
+            this.cardNumLabel.setText("Card #" + Cardnum + " out of " + cards.size());
+            this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>");
+            this.sideLabel.setText("Side: Question");
+            if (cards.get(index).getRevisit() == true) {
+                this.revisitCheck.setSelected(true);
+            } else if (cards.get(index).getRevisit() == false) {
+                this.revisitCheck.setSelected(false);
+            }
+            repaint();
+        }
+    }
     public DisplayCards() {
         initComponents();
         tools = Toolkit.getDefaultToolkit();
@@ -111,7 +129,7 @@ public class DisplayCards extends javax.swing.JFrame {
         openfile();
 
         showRecord();
-        
+
         repaint();
         // drawStuff();
     }
@@ -119,7 +137,7 @@ public class DisplayCards extends javax.swing.JFrame {
     @Override
     public void paint(Graphics g) {
         super.paint(g); //To change body of generated methods, choose Tools | Templates.
-         int y = 22;
+        int y = 22;
         int x = 22;
         g = this.cardPanel.getGraphics();
         g.setColor(Color.WHITE);
@@ -133,8 +151,6 @@ public class DisplayCards extends javax.swing.JFrame {
         g.setColor(Color.red);
         g.drawLine(0, 22, this.cardPanel.getWidth(), 22);
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -155,6 +171,8 @@ public class DisplayCards extends javax.swing.JFrame {
         cardNumLabel = new javax.swing.JLabel();
         cardPanel = new javax.swing.JPanel();
         cardInfoLabel = new javax.swing.JLabel();
+        revisitCheck = new javax.swing.JCheckBox();
+        showRevisitsCheck = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         fileOpenMenu = new javax.swing.JMenuItem();
@@ -233,6 +251,15 @@ public class DisplayCards extends javax.swing.JFrame {
                 .addGap(38, 38, 38))
         );
 
+        revisitCheck.setText("Revisit Card");
+        revisitCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                revisitCheckActionPerformed(evt);
+            }
+        });
+
+        showRevisitsCheck.setText("Show only Revisits");
+
         fileMenu.setText("File");
 
         fileOpenMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
@@ -263,22 +290,29 @@ public class DisplayCards extends javax.swing.JFrame {
                         .addGap(69, 69, 69)
                         .addComponent(cardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(131, 131, 131)
-                        .addComponent(firstButton)
+                        .addGap(165, 165, 165)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(randButton)
+                            .addComponent(firstButton))
                         .addGap(18, 18, 18)
-                        .addComponent(prevButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(nextButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(prevButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(nextButton))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(13, 13, 13)
+                                .addComponent(revisitCheck)))
                         .addGap(18, 18, 18)
-                        .addComponent(lastButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(randButton)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lastButton)
+                            .addComponent(showRevisitsCheck))))
                 .addContainerGap(86, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(78, Short.MAX_VALUE)
+                .addContainerGap(73, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cardNumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sideLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -289,9 +323,13 @@ public class DisplayCards extends javax.swing.JFrame {
                     .addComponent(firstButton)
                     .addComponent(prevButton)
                     .addComponent(nextButton)
-                    .addComponent(lastButton)
-                    .addComponent(randButton))
-                .addGap(47, 47, 47))
+                    .addComponent(lastButton))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(randButton)
+                    .addComponent(revisitCheck)
+                    .addComponent(showRevisitsCheck))
+                .addContainerGap())
         );
 
         pack();
@@ -344,47 +382,113 @@ public class DisplayCards extends javax.swing.JFrame {
 
     private void firstButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstButtonActionPerformed
         // TODO add your handling code here:
-     
-        index = 0;
-        Cardnum = 1;
-        showRecord();
-        repaint();
+        if (showRevisitsCheck.isSelected() == false) {
+            index = 0;
+            Cardnum = 1;
+            showRecord();
+            repaint();
+        } else if (showRevisitsCheck.isSelected() == true && lowRevisit != index) {
+            int change = 0;
+            
+               for (int i = 0; i < cards.size(); i++) {
+                if (cards.get(i).getRevisit() == true) {
+                    index = i;
+                    change++;
+                    break;
+                }
+            }
+            Cardnum = Cardnum - change;// not gonna lie I feel pretty smart about his one ;)
+            showRecord();
+            repaint();
+            
+        }
     }//GEN-LAST:event_firstButtonActionPerformed
 
     private void prevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevButtonActionPerformed
         // TODO add your handling code here:
         if (index > 0) {
-            index--;
-            Cardnum--;
-            showRecord();
-            repaint();
+            if (showRevisitsCheck.isSelected() == false) {
+                index--;
+                Cardnum--;
+                showRecord();
+                repaint();
+            } else if (showRevisitsCheck.isSelected() == true && lowRevisit != index) {
+                do {
+                    index--;
+                    Cardnum--;
+                }while (cards.get(index).getRevisit() == false);
+                showRecord();
+                repaint();
+            }
         }
     }//GEN-LAST:event_prevButtonActionPerformed
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
         // TODO add your handling code here:
         if (index < cards.size() - 1) {
-            index++;
-            Cardnum++;
-            showRecord();
-            repaint();
+            if (showRevisitsCheck.isSelected() == false) {
+                index++;
+                Cardnum++;
+                showRecord();
+                repaint();
+            } else if (showRevisitsCheck.isSelected() == true && highRevisit != index) {
+                do{
+                    index++;
+                    Cardnum++;
+                }while (cards.get(index).getRevisit() == false) ;
+                showRecord();
+                repaint();
+            }
         }
     }//GEN-LAST:event_nextButtonActionPerformed
 
     private void lastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastButtonActionPerformed
         // TODO add your handling code here:
-        index = cards.size() - 1;
-        Cardnum = cards.size();
-        showRecord();
-        repaint();
+        if (showRevisitsCheck.isSelected() == false) {
+            index = cards.size() - 1;
+            Cardnum = cards.size();
+            showRecord();
+            repaint();
+        } else if (showRevisitsCheck.isSelected() == true && highRevisit != index) {
+            int change = 0;
+
+            for (int i = cards.size()-1; i < cards.size(); i--) {
+                if (cards.get(i).getRevisit() == true) {
+                    index = i;
+                    ;
+                    break;
+                }
+            }
+            Cardnum = Cardnum + change +1;// not gonna lie I feel pretty smart about his one ;)
+            showRecord();
+            repaint();
+        }
     }//GEN-LAST:event_lastButtonActionPerformed
 
     private void randButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randButtonActionPerformed
         // TODO add your handling code here:
+        if (showRevisitsCheck.isSelected() == false) {
         Collections.shuffle(cards);
         //index = rand.nextInt(cards.size()-1);
         showRecord();
         repaint();
+        }
+        else if(showRevisitsCheck.isSelected() == true){
+            Collections.shuffle(cards);
+            for(int i = 0; i < cards.size(); i++){
+            if(cards.get(i).getRevisit() == true){
+                highRevisit = i;
+            }
+        }
+         for(int i = 0; i < cards.size(); i++){
+            if(cards.get(i).getRevisit() == true){
+               lowRevisit = i;
+               break;
+            }
+        }
+        showRecord();
+        repaint();
+        }
     }//GEN-LAST:event_randButtonActionPerformed
 
     private void cardPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cardPanelMouseClicked
@@ -399,6 +503,42 @@ public class DisplayCards extends javax.swing.JFrame {
         }
         repaint();
     }//GEN-LAST:event_cardPanelMouseClicked
+
+    private void revisitCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revisitCheckActionPerformed
+        // TODO add your handling code here:
+//        if(revisitCheck.isSelected()){
+//            revisits.add(cards.get(index));
+//        }
+//        else if(!revisitCheck.isSelected()){
+//            for(int i = 0; i < cards.size(); i++){
+//                for(int x = 0; x < revisits.size(); x++){
+//                    if(cards.get(i) == revisits.get(x)){
+//                        revisits.remove(x);
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+
+        if (revisitCheck.isSelected()) {
+            cards.get(index).setRevisit(true);
+        } else if (!revisitCheck.isSelected()) {
+            cards.get(index).setRevisit(false);
+        }
+        
+        for(int i = 0; i < cards.size(); i++){
+            if(cards.get(i).getRevisit() == true){
+                highRevisit = i;
+            }
+        }
+         for(int i = 0; i < cards.size(); i++){
+            if(cards.get(i).getRevisit() == true){
+               lowRevisit = i;
+               break;
+            }
+        }
+
+    }//GEN-LAST:event_revisitCheckActionPerformed
 
     /**
      * @param args the command line arguments
@@ -448,6 +588,8 @@ public class DisplayCards extends javax.swing.JFrame {
     private javax.swing.JButton nextButton;
     private javax.swing.JButton prevButton;
     private javax.swing.JButton randButton;
+    private javax.swing.JCheckBox revisitCheck;
+    private javax.swing.JCheckBox showRevisitsCheck;
     private javax.swing.JLabel sideLabel;
     // End of variables declaration//GEN-END:variables
 }

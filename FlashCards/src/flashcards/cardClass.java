@@ -13,14 +13,24 @@ public class cardClass {
     private int id;
     private String question;
     private String answer;
+    private boolean revisit;
 
     public cardClass() {
     }
 
-    public cardClass(int id, String question, String answer) {
+    public cardClass(int id, String question, String answer, boolean revisit) {
         this.id = id;
         this.question = question;
         this.answer = answer;
+        this.revisit = revisit;
+    }
+    
+    public boolean getRevisit(){
+        return revisit;
+    }
+    
+    public void setRevisit(boolean revisit){
+        this.revisit = revisit;
     }
 
     public int getId() {
@@ -49,7 +59,7 @@ public class cardClass {
 
     @Override
     public String toString() {
-        return "cardClass{" + "id=" + id + ", question=" + question + ", answer=" + answer + '}';
+        return "cardClass{" + "id=" + id + ", question=" + question + ", answer=" + answer + ", revisit=" + revisit + '}';
     }
     
     
