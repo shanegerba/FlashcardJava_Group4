@@ -5,14 +5,20 @@
  */
 package flashcards;
 
+import static flashcards.DisplayCards.cards;
 import static flashcards.DisplayCards.fs;
+import static flashcards.DisplayCards.pathToFile;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
@@ -30,6 +36,8 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
      Image openFile;
      Image saveFile;
      Toolkit tools;
+     static BufferedReader tempReader; // reads the file one line at a time, caches upcoming lines
+     static InputStream tempIn = null;
      static Path pathToFile; //access to the file
     
      public void loadImages() {
@@ -434,6 +442,31 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
 
             fs = FileSystems.getDefault();
             pathToFile = fs.getPath(selectedFile.getAbsolutePath());
+             cardClass aCard;
+            String line;
+            cards.removeAll(cards);// clear out previous cards from list
+            try {
+                tempIn = Files.newInputStream(pathToFile);
+                tempReader = new BufferedReader(new InputStreamReader(tempIn));
+
+                while ((line = tempReader.readLine()) != null) {
+                    String cardInfo[] = line.split(",");
+                    aCard = new cardClass();
+
+                    try {
+                        aCard.setId(Integer.parseInt(cardInfo[0]));
+                        aCard.setQuestion(cardInfo[1]);
+                        aCard.setAnswer(cardInfo[2]);
+
+                        cards.add(aCard);
+                    } catch (NumberFormatException numberFormatException) {
+                        //do nothing - skip error
+                    }
+                }
+             } catch (IOException ex) {
+                System.out.println("Cannot open file " + pathToFile.getFileName());
+                System.exit(0);//die if file does not open
+            }
         }
     }//GEN-LAST:event_openMenuActionPerformed
 
