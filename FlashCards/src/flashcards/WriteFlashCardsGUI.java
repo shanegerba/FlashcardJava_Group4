@@ -375,7 +375,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
                 //%d = int
                 //%f = float or double
                 //%s = string
-                outputLine = String.format("%d,%s,%s\n", cards.get(x).getId(), cards.get(x).getQuestion(), cards.get(x).getAnswer());
+                outputLine = String.format("%d,,%s,,%s\n", cards.get(x).getId(), cards.get(x).getQuestion(), cards.get(x).getAnswer());
                 write.write(outputLine);
             }//end of for
             write.flush();
@@ -461,7 +461,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
                 tempReader = new BufferedReader(new InputStreamReader(tempIn));
 
                 while ((line = tempReader.readLine()) != null) {
-                    String cardInfo[] = line.split(",");
+                    String cardInfo[] = line.split(",,");
                     aCard = new cardClass();
 
                     try {

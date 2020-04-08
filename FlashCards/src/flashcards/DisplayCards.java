@@ -74,7 +74,7 @@ public class DisplayCards extends javax.swing.JFrame {
         String line;
         try {
             while ((line = tempReader.readLine()) != null) {
-                String cardInfo[] = line.split(",");
+                String cardInfo[] = line.split(",,");
                 aCard = new cardClass();
 
                 try {
@@ -361,7 +361,7 @@ public class DisplayCards extends javax.swing.JFrame {
                 tempReader = new BufferedReader(new InputStreamReader(tempIn));
 
                 while ((line = tempReader.readLine()) != null) {
-                    String cardInfo[] = line.split(",");
+                    String cardInfo[] = line.split(",,");
                     aCard = new cardClass();
 
                     try {
