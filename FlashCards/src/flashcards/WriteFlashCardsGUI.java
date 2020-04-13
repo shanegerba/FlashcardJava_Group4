@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import com.inet.jortho.SpellChecker;
+import com.inet.jortho.FileUserDictionary;
 
 /**
  *
@@ -80,6 +82,14 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         this.setTitle("Card #" + (index + 1) + " of " + cards.size());
     }
     
+    public void initializeSpellChecker(){
+        String userDictionaryPath = "/dictionary/";
+        SpellChecker.setUserDictionaryProvider(new FileUserDictionary(userDictionaryPath));
+        SpellChecker.registerDictionaries(getClass().getResource(userDictionaryPath), "en");
+        SpellChecker.register(answerTextArea);
+        SpellChecker.register(questionTextArea);
+    }
+   
     public void updateCard() {
         cards.get(index).setId(index + 1);
         cards.get(index).setQuestion(this.questionTextArea.getText());
@@ -103,6 +113,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         
         exampleCard();
         showCard();
+        initializeSpellChecker();
     }
 
     /**
