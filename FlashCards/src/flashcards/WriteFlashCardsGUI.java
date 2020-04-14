@@ -177,7 +177,9 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
 
         questionTextArea.setColumns(20);
         questionTextArea.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
+        questionTextArea.setLineWrap(true);
         questionTextArea.setRows(5);
+        questionTextArea.setWrapStyleWord(true);
         questionTextArea.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         questionTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -211,7 +213,9 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
 
         answerTextArea.setColumns(20);
         answerTextArea.setFont(new java.awt.Font("Monospaced", 0, 16)); // NOI18N
+        answerTextArea.setLineWrap(true);
         answerTextArea.setRows(5);
+        answerTextArea.setWrapStyleWord(true);
         answerTextArea.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         answerTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
