@@ -25,33 +25,36 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import com.inet.jortho.SpellChecker;
 import com.inet.jortho.FileUserDictionary;
+import java.awt.Dimension;
 
 /**
  *
  * @author rusty
  */
 public class WriteFlashCardsGUI extends javax.swing.JFrame {
-    
+
     private static ArrayList<cardClass> cards = new ArrayList<>();
     private static int index = 0;
-     Image openFile;
-     Image saveFile;
-     Toolkit tools;
-     static BufferedReader tempReader; // reads the file one line at a time, caches upcoming lines
-     static InputStream tempIn = null;
-     static Path pathToFile; //access to the file
-    
-     public void loadImages() {
+    Image openFile;
+    Image saveFile;
+    Image flashcards;
+    Toolkit tools;
+    static BufferedReader tempReader; // reads the file one line at a time, caches upcoming lines
+    static InputStream tempIn = null;
+    static Path pathToFile; //access to the file
+
+    public void loadImages() {
         openFile = tools.getImage(getClass().getResource("openFile.png"));
         saveFile = tools.getImage(getClass().getResource("saveFile.jpg"));
-     }
-     
-     public ImageIcon getImage(Image theImage) {
+        flashcards = tools.getImage(getClass().getResource("flashcards.png"));
+    }
+
+    public ImageIcon getImage(Image theImage) {
         Image scaledAlblum = theImage.getScaledInstance(20, 20, Image.SCALE_FAST);
         return new ImageIcon(scaledAlblum);
     }
-    
-    public void newCard(){
+
+    public void newCard() {
         cardClass newCard = new cardClass();
         newCard.setId(index + 1);
         newCard.setQuestion("");
@@ -59,58 +62,61 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         cards.add(newCard);
         showCard();
     }
-    
+
     public void exampleCard() {
         cardClass exCard = new cardClass();
         try {
             exCard.setId(1);
             exCard.setQuestion("Question text goes here");
             exCard.setAnswer("Answer text goes here");
-            
+
             cards.add(exCard);
-            
+
         } catch (NumberFormatException numberFormatException) {
             //do nothing - skip error
         }
-        
+
     }
-    
+
     public void showCard() {
         this.questionTextArea.setText(cards.get(index).getQuestion());
         this.answerTextArea.setText(cards.get(index).getAnswer());
-        
+
         this.setTitle("Card #" + (index + 1) + " of " + cards.size());
     }
-    
-    public void initializeSpellChecker(){
+
+    public void initializeSpellChecker() {
         String userDictionaryPath = "/dictionary/";
         SpellChecker.setUserDictionaryProvider(new FileUserDictionary(userDictionaryPath));
         SpellChecker.registerDictionaries(getClass().getResource(userDictionaryPath), "en");
         SpellChecker.register(answerTextArea);
         SpellChecker.register(questionTextArea);
     }
-   
+
     public void updateCard() {
         cards.get(index).setId(index + 1);
         cards.get(index).setQuestion(this.questionTextArea.getText());
         cards.get(index).setAnswer(this.answerTextArea.getText());
-        
+
     }
-    
+
     /**
      * Creates new form WriteFlashCardsGUI
      */
     public WriteFlashCardsGUI() {
         initComponents();
-        
-          tools = Toolkit.getDefaultToolkit();
+
+        tools = Toolkit.getDefaultToolkit();
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
 
         this.setTitle("Flashcards Program");
         loadImages();
         //put a file open picture for the file open button
         openMenu.setIcon(getImage(openFile));
         saveMenu.setIcon(getImage(saveFile));
-        
+        flashcardsMenu.setIcon(getImage(flashcards));
+
         exampleCard();
         showCard();
         initializeSpellChecker();
@@ -145,8 +151,10 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         saveMenu = new javax.swing.JMenuItem();
         openMenu = new javax.swing.JMenuItem();
+        flashcardsMenu = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(800, 540));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -264,6 +272,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
+        saveMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         saveMenu.setText("Save");
         saveMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -272,6 +281,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         });
         jMenu1.add(saveMenu);
 
+        openMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         openMenu.setText("Open");
         openMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -279,6 +289,14 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
             }
         });
         jMenu1.add(openMenu);
+
+        flashcardsMenu.setText("Display Flashcards");
+        flashcardsMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                flashcardsMenuActionPerformed(evt);
+            }
+        });
+        jMenu1.add(flashcardsMenu);
 
         jMenuBar1.add(jMenu1);
 
@@ -358,58 +376,55 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
     private void saveMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuActionPerformed
         // TODO add your handling code here:
         updateCard();
-             try{
-            
+        try {
+
             String fileName = cards.get(index).getQuestion() + ".txt";
             File saveFile = new File(fileName);
-            
+
             //jfile chooser
             JFileChooser save = new JFileChooser();
             save.setSelectedFile(saveFile); //puts file name in the box
-            
+
             int button = save.showSaveDialog(this); // hold onto which button was pressed
-            if(button == JFileChooser.APPROVE_OPTION){
+            if (button == JFileChooser.APPROVE_OPTION) {
                 //save
                 fileName = save.getSelectedFile().toString();
                 FileOutputStream qrSave = new FileOutputStream(fileName);
-                
+
                 //MatrixToImageWriter.writeToStream(QRmatrix, "gif", qrSave);
                 //QRimage = tools.createImage(QRBuffered.getSource());
                 String outputLine = "";
-        File outFile = new File(fileName);
-        
-        try {
-            FileWriter write = new FileWriter(outFile);
-            
-            for (int x = 0; x < cards.size(); x++) {
+                File outFile = new File(fileName);
 
-                //%d = int
-                //%f = float or double
-                //%s = string
-                outputLine = String.format("%d,,%s,,%s\n", cards.get(x).getId(), cards.get(x).getQuestion(), cards.get(x).getAnswer());
-                write.write(outputLine);
-            }//end of for
-            write.flush();
-            write.close();
-        } catch (IOException ex) {
-            //   Logger.getLogger(CompanyGUI.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Cannot write company\n" + ex.getMessage(),
-                    "FileIO Error", JOptionPane.ERROR_MESSAGE);
-        }
-                
+                try {
+                    FileWriter write = new FileWriter(outFile);
+
+                    for (int x = 0; x < cards.size(); x++) {
+
+                        //%d = int
+                        //%f = float or double
+                        //%s = string
+                        outputLine = String.format("%d,,%s,,%s\n", cards.get(x).getId(), cards.get(x).getQuestion(), cards.get(x).getAnswer());
+                        write.write(outputLine);
+                    }//end of for
+                    write.flush();
+                    write.close();
+                } catch (IOException ex) {
+                    //   Logger.getLogger(CompanyGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, "Cannot write company\n" + ex.getMessage(),
+                            "FileIO Error", JOptionPane.ERROR_MESSAGE);
+                }
+
                 qrSave.close();
-            }
-            else{
+            } else {
                 //cancel
             }
-            
-            
-        }
-        catch(Exception ex){
+
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "QR save failed" + ex.toString());
         }
-       
-        
+
+
     }//GEN-LAST:event_saveMenuActionPerformed
 
     private void firstBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstBtnActionPerformed
@@ -421,15 +436,15 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
     private void nextBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextBtnActionPerformed
         // TODO add your handling code here:
         updateCard();
-        if(index == cards.size() - 1){
+        if (index == cards.size() - 1) {
             index++;
             newCard();
-        }else{
+        } else {
             index++;
             showCard();
         }
-           
-       
+
+
     }//GEN-LAST:event_nextBtnActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -440,9 +455,9 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
     private void prevBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevBtnActionPerformed
         // TODO add your handling code here:
         updateCard();
-        if(index > 0){
-        index--;
-        showCard();
+        if (index > 0) {
+            index--;
+            showCard();
         }
     }//GEN-LAST:event_prevBtnActionPerformed
 
@@ -454,7 +469,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
 
     private void openMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuActionPerformed
         // TODO add your handling code here:
-         JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));//set initial directory to users home directory
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -464,7 +479,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
 
             fs = FileSystems.getDefault();
             pathToFile = fs.getPath(selectedFile.getAbsolutePath());
-             cardClass aCard;
+            cardClass aCard;
             String line;
             cards.removeAll(cards);// clear out previous cards from list
             try {
@@ -486,7 +501,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
                     }
                 }
                 showCard();
-             } catch (IOException ex) {
+            } catch (IOException ex) {
                 System.out.println("Cannot open file " + pathToFile.getFileName());
                 System.exit(0);//die if file does not open
             }
@@ -495,18 +510,25 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
 
     private void questionTextAreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_questionTextAreaMouseClicked
         // TODO add your handling code here:
-        if(questionTextArea.getText().equals("Question text goes here")){
+        if (questionTextArea.getText().equals("Question text goes here")) {
             questionTextArea.setText("");
         }
-      
+
     }//GEN-LAST:event_questionTextAreaMouseClicked
 
     private void answerTextAreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_answerTextAreaMouseClicked
         // TODO add your handling code here:
-        if(answerTextArea.getText().equals("Answer text goes here")){
+        if (answerTextArea.getText().equals("Answer text goes here")) {
             answerTextArea.setText("");
         }
     }//GEN-LAST:event_answerTextAreaMouseClicked
+
+    private void flashcardsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_flashcardsMenuActionPerformed
+        // TODO add your handling code here:
+        DisplayCards displayCards = new DisplayCards();
+        displayCards.setVisible(true);
+        WriteFlashCardsGUI.this.setVisible(false);
+    }//GEN-LAST:event_flashcardsMenuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -546,6 +568,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea answerTextArea;
     private javax.swing.JButton firstBtn;
+    private javax.swing.JMenuItem flashcardsMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

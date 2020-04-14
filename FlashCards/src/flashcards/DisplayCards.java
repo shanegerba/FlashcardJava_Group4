@@ -6,6 +6,7 @@
 package flashcards;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -26,7 +27,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
 
 /**
  *
@@ -44,6 +44,7 @@ public class DisplayCards extends javax.swing.JFrame {
     static InputStream tempIn = null;
     static int index = 0, current = 0, Cardnum = 1, highRevisit  = cards.size()-1, lowRevisit = 0;
     Image openFile;
+    Image flashcards;
     Toolkit tools;
     Random rand = new Random();
 
@@ -52,6 +53,7 @@ public class DisplayCards extends javax.swing.JFrame {
      */
     public void loadImages() {
         openFile = tools.getImage(getClass().getResource("openFile.png"));
+        flashcards =  tools.getImage(getClass().getResource("flashcards.png"));
     }
 
     public ImageIcon getImage(Image theImage) {
@@ -59,39 +61,39 @@ public class DisplayCards extends javax.swing.JFrame {
         return new ImageIcon(scaledAlblum);
     }
 
-    public static void openfile() {
-        fs = FileSystems.getDefault();
-        pathToFile = fs.getPath("c:\\data\\flashcards.txt");
-
-        try {
-            tempIn = Files.newInputStream(pathToFile);
-            tempReader = new BufferedReader(new InputStreamReader(tempIn));
-        } catch (IOException ex) {
-            System.out.println("Cannot open file " + pathToFile.getFileName());
-            System.exit(0);//die if file does not open
-        }
-        cardClass aCard;
-        String line;
-        try {
-            while ((line = tempReader.readLine()) != null) {
-                String cardInfo[] = line.split(",,");
-                aCard = new cardClass();
-
-                try {
-                    aCard.setId(Integer.parseInt(cardInfo[0]));
-                    aCard.setQuestion(cardInfo[1]);
-                    aCard.setAnswer(cardInfo[2]);
-
-                    cards.add(aCard);
-
-                } catch (NumberFormatException numberFormatException) {
-                    //do nothing - skip error
-                }
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(DisplayCards.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public static void openfile() {
+//        fs = FileSystems.getDefault();
+//        pathToFile = fs.getPath("c:\\data\\flashcards.txt");
+//
+//        try {
+//            tempIn = Files.newInputStream(pathToFile);
+//            tempReader = new BufferedReader(new InputStreamReader(tempIn));
+//        } catch (IOException ex) {
+//            System.out.println("Cannot open file " + pathToFile.getFileName());
+//            System.exit(0);//die if file does not open
+//        }
+//        cardClass aCard;
+//        String line;
+//        try {
+//            while ((line = tempReader.readLine()) != null) {
+//                String cardInfo[] = line.split(",,");
+//                aCard = new cardClass();
+//
+//                try {
+//                    aCard.setId(Integer.parseInt(cardInfo[0]));
+//                    aCard.setQuestion(cardInfo[1]);
+//                    aCard.setAnswer(cardInfo[2]);
+//
+//                    cards.add(aCard);
+//
+//                } catch (NumberFormatException numberFormatException) {
+//                    //do nothing - skip error
+//                }
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(DisplayCards.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 
     public void showRecord() {
 
@@ -116,19 +118,26 @@ public class DisplayCards extends javax.swing.JFrame {
             }
             repaint();
         }
+        
+        //force jframe to resize to fix graphics bug
+        this.setSize(800, 541);
+        this.setSize(800, 540);
     }
     public DisplayCards() {
         initComponents();
         tools = Toolkit.getDefaultToolkit();
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
 
         this.setTitle("Flashcards Program");
         loadImages();
         //put a file open picture for the file open button
         fileOpenMenu.setIcon(getImage(openFile));
+        flashcardsMenu.setIcon(getImage(flashcards));
 
-        openfile();
+        //openfile();
 
-        showRecord();
+        //showRecord();
 
         repaint();
         // drawStuff();
@@ -174,12 +183,14 @@ public class DisplayCards extends javax.swing.JFrame {
         revisitCheck = new javax.swing.JCheckBox();
         showRevisitsCheck = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
+        menu = new javax.swing.JMenu();
         fileOpenMenu = new javax.swing.JMenuItem();
+        flashcardsMenu = new javax.swing.JMenuItem();
 
         jLabel1.setText("jLabel1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(800, 540));
 
         firstButton.setText("|<");
         firstButton.addActionListener(new java.awt.event.ActionListener() {
@@ -209,6 +220,7 @@ public class DisplayCards extends javax.swing.JFrame {
             }
         });
 
+        randButton.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         randButton.setText("Random");
         randButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -216,8 +228,10 @@ public class DisplayCards extends javax.swing.JFrame {
             }
         });
 
+        sideLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         sideLabel.setText("Side:");
 
+        cardNumLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         cardNumLabel.setText("Card:");
 
         cardPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -251,6 +265,7 @@ public class DisplayCards extends javax.swing.JFrame {
                 .addGap(38, 38, 38))
         );
 
+        revisitCheck.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         revisitCheck.setText("Revisit Card");
         revisitCheck.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -258,6 +273,7 @@ public class DisplayCards extends javax.swing.JFrame {
             }
         });
 
+        showRevisitsCheck.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         showRevisitsCheck.setText("Show only Revisits");
         showRevisitsCheck.setEnabled(false);
         showRevisitsCheck.addActionListener(new java.awt.event.ActionListener() {
@@ -266,7 +282,7 @@ public class DisplayCards extends javax.swing.JFrame {
             }
         });
 
-        fileMenu.setText("File");
+        menu.setText("File");
 
         fileOpenMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         fileOpenMenu.setText("File Open");
@@ -275,9 +291,17 @@ public class DisplayCards extends javax.swing.JFrame {
                 fileOpenMenuActionPerformed(evt);
             }
         });
-        fileMenu.add(fileOpenMenu);
+        menu.add(fileOpenMenu);
 
-        jMenuBar1.add(fileMenu);
+        flashcardsMenu.setText("Create Flashcards");
+        flashcardsMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                flashcardsMenuActionPerformed(evt);
+            }
+        });
+        menu.add(flashcardsMenu);
+
+        jMenuBar1.add(menu);
 
         setJMenuBar(jMenuBar1);
 
@@ -288,37 +312,35 @@ public class DisplayCards extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(102, 102, 102)
-                        .addComponent(cardNumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(117, 117, 117)
-                        .addComponent(sideLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
-                        .addComponent(cardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(165, 165, 165)
+                        .addGap(153, 153, 153)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(randButton)
-                            .addComponent(firstButton))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(cardNumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(sideLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(cardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(prevButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(nextButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addComponent(revisitCheck)))
+                                .addComponent(randButton)
+                                .addGap(31, 31, 31)
+                                .addComponent(revisitCheck)
+                                .addGap(18, 18, 18)
+                                .addComponent(showRevisitsCheck))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(260, 260, 260)
+                        .addComponent(firstButton)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lastButton)
-                            .addComponent(showRevisitsCheck))))
-                .addContainerGap(86, Short.MAX_VALUE))
+                        .addComponent(prevButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(nextButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(lastButton)))
+                .addContainerGap(197, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(73, Short.MAX_VALUE)
+                .addGap(55, 55, 55)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cardNumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sideLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -330,12 +352,12 @@ public class DisplayCards extends javax.swing.JFrame {
                     .addComponent(prevButton)
                     .addComponent(nextButton)
                     .addComponent(lastButton))
-                .addGap(18, 18, 18)
+                .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(randButton)
                     .addComponent(revisitCheck)
                     .addComponent(showRevisitsCheck))
-                .addContainerGap())
+                .addGap(93, 93, 93))
         );
 
         pack();
@@ -509,7 +531,12 @@ public class DisplayCards extends javax.swing.JFrame {
             this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>");
             this.sideLabel.setText("Side: Question");
         }
+        
         repaint();
+         
+        //force jframe to resize to fix graphics bug
+        this.setSize(800, 541);
+        this.setSize(800, 540);
     }//GEN-LAST:event_cardPanelMouseClicked
 
     private void revisitCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revisitCheckActionPerformed
@@ -572,6 +599,13 @@ public class DisplayCards extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_showRevisitsCheckActionPerformed
 
+    private void flashcardsMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_flashcardsMenuActionPerformed
+        // TODO add your handling code here:
+        WriteFlashCardsGUI writecards = new WriteFlashCardsGUI();
+        writecards.setVisible(true);
+        DisplayCards.this.setVisible(false);
+    }//GEN-LAST:event_flashcardsMenuActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -611,12 +645,13 @@ public class DisplayCards extends javax.swing.JFrame {
     private javax.swing.JLabel cardInfoLabel;
     private javax.swing.JLabel cardNumLabel;
     private javax.swing.JPanel cardPanel;
-    private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem fileOpenMenu;
     private javax.swing.JButton firstButton;
+    private javax.swing.JMenuItem flashcardsMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JButton lastButton;
+    private javax.swing.JMenu menu;
     private javax.swing.JButton nextButton;
     private javax.swing.JButton prevButton;
     private javax.swing.JButton randButton;
