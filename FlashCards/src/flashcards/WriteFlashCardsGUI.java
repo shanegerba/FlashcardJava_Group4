@@ -38,6 +38,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
     Image openFile;
     Image saveFile;
     Image flashcards;
+    Image flashcardsLogo;
     Toolkit tools;
     static BufferedReader tempReader; // reads the file one line at a time, caches upcoming lines
     static InputStream tempIn = null;
@@ -47,6 +48,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         openFile = tools.getImage(getClass().getResource("openFile.png"));
         saveFile = tools.getImage(getClass().getResource("saveFile.jpg"));
         flashcards = tools.getImage(getClass().getResource("flashcards.png"));
+        flashcardsLogo = tools.getImage(getClass().getResource("ptc icon.jpg"));
     }
 
     public ImageIcon getImage(Image theImage) {
@@ -116,6 +118,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         openMenu.setIcon(getImage(openFile));
         saveMenu.setIcon(getImage(saveFile));
         flashcardsMenu.setIcon(getImage(flashcards));
+         this.setIconImage(flashcardsLogo);
 
         exampleCard();
         showCard();
@@ -234,10 +237,13 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
                 .addContainerGap(47, Short.MAX_VALUE))
         );
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("1. Type questions and their answers into the text fields on the appropriate cards");
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("2. You can use the left and right arrows to move back and forth between created cards");
 
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("3. If you click previous, clicking next causes a new card to be made in the position after this card, click end to go to the end");
 
         prevBtn.setText("<");
@@ -268,6 +274,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("4. Once done, just close the window, your file to be used in the Flashcard application will be in your C drive in the data folder ");
 
         jMenu1.setText("File");
@@ -345,7 +352,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
@@ -367,7 +374,7 @@ public class WriteFlashCardsGUI extends javax.swing.JFrame {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel6)
-                .addContainerGap())
+                .addGap(47, 47, 47))
         );
 
         pack();

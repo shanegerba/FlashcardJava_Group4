@@ -45,6 +45,7 @@ public class DisplayCards extends javax.swing.JFrame {
     static int index = 0, current = 0, Cardnum = 1, highRevisit = cards.size() - 1, lowRevisit = 0;
     Image openFile;
     Image flashcards;
+    Image flashcardsLogo;
     Toolkit tools;
     Random rand = new Random();
 
@@ -54,6 +55,7 @@ public class DisplayCards extends javax.swing.JFrame {
     public void loadImages() {
         openFile = tools.getImage(getClass().getResource("openFile.png"));
         flashcards = tools.getImage(getClass().getResource("flashcards.png"));
+        flashcardsLogo = tools.getImage(getClass().getResource("ptc icon.jpg"));
     }
 
     public ImageIcon getImage(Image theImage) {
@@ -131,6 +133,7 @@ public class DisplayCards extends javax.swing.JFrame {
         this.setTitle("Flashcards Program");
         loadImages();
         //put a file open picture for the file open button
+        this.setIconImage(flashcardsLogo);
         fileOpenMenu.setIcon(getImage(openFile));
         flashcardsMenu.setIcon(getImage(flashcards));
 
