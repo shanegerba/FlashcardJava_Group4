@@ -42,7 +42,7 @@ public class DisplayCards extends javax.swing.JFrame {
     static BasicFileAttributes attributes;
     static BufferedReader tempReader; // reads the file one line at a time, caches upcoming lines
     static InputStream tempIn = null;
-    static int index = 0, current = 0, Cardnum = 1, highRevisit  = cards.size()-1, lowRevisit = 0;
+    static int index = 0, current = 0, Cardnum = 1, highRevisit = cards.size() - 1, lowRevisit = 0;
     Image openFile;
     Image flashcards;
     Toolkit tools;
@@ -53,7 +53,7 @@ public class DisplayCards extends javax.swing.JFrame {
      */
     public void loadImages() {
         openFile = tools.getImage(getClass().getResource("openFile.png"));
-        flashcards =  tools.getImage(getClass().getResource("flashcards.png"));
+        flashcards = tools.getImage(getClass().getResource("flashcards.png"));
     }
 
     public ImageIcon getImage(Image theImage) {
@@ -94,7 +94,6 @@ public class DisplayCards extends javax.swing.JFrame {
 //            Logger.getLogger(DisplayCards.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
-
     public void showRecord() {
 
         if (showRevisitsCheck.isSelected() == true && cards.get(index).getRevisit() == true) {
@@ -118,11 +117,11 @@ public class DisplayCards extends javax.swing.JFrame {
             }
             repaint();
         }
-        
         //force jframe to resize to fix graphics bug
         this.setSize(800, 541);
         this.setSize(800, 540);
     }
+
     public DisplayCards() {
         initComponents();
         tools = Toolkit.getDefaultToolkit();
@@ -135,10 +134,15 @@ public class DisplayCards extends javax.swing.JFrame {
         fileOpenMenu.setIcon(getImage(openFile));
         flashcardsMenu.setIcon(getImage(flashcards));
 
+        firstButton.setEnabled(false);
+        prevButton.setEnabled(false);
+        nextButton.setEnabled(false);
+        lastButton.setEnabled(false);
+        randButton.setEnabled(false);
+        revisitCheck.setEnabled(false);
         //openfile();
 
         //showRecord();
-
         repaint();
         // drawStuff();
     }
@@ -371,7 +375,7 @@ public class DisplayCards extends javax.swing.JFrame {
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             //test to make sure it works
-            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+           // System.out.println("Selected file: " + selectedFile.getAbsolutePath());
 
             fs = FileSystems.getDefault();
             pathToFile = fs.getPath(selectedFile.getAbsolutePath());
@@ -399,6 +403,13 @@ public class DisplayCards extends javax.swing.JFrame {
 
                 showRecord();
                 repaint();
+                
+                firstButton.setEnabled(true);
+                prevButton.setEnabled(true);
+                nextButton.setEnabled(true);
+                lastButton.setEnabled(true);
+                randButton.setEnabled(true);
+                revisitCheck.setEnabled(true);
 
             } catch (IOException ex) {
                 System.out.println("Cannot open file " + pathToFile.getFileName());
@@ -417,8 +428,8 @@ public class DisplayCards extends javax.swing.JFrame {
             repaint();
         } else if (showRevisitsCheck.isSelected() == true && lowRevisit != index) {
             int change = 0;
-            
-               for (int i = 0; i < cards.size(); i++) {
+
+            for (int i = 0; i < cards.size(); i++) {
                 if (cards.get(i).getRevisit() == true) {
                     index = i;
                     change++;
@@ -428,7 +439,7 @@ public class DisplayCards extends javax.swing.JFrame {
             Cardnum = lowRevisit + 1;
             showRecord();
             repaint();
-            
+
         }
     }//GEN-LAST:event_firstButtonActionPerformed
 
@@ -444,7 +455,7 @@ public class DisplayCards extends javax.swing.JFrame {
                 do {
                     index--;
                     Cardnum--;
-                }while (cards.get(index).getRevisit() == false);
+                } while (cards.get(index).getRevisit() == false);
                 showRecord();
                 repaint();
             }
@@ -460,10 +471,10 @@ public class DisplayCards extends javax.swing.JFrame {
                 showRecord();
                 repaint();
             } else if (showRevisitsCheck.isSelected() == true && highRevisit != index) {
-                do{
+                do {
                     index++;
                     Cardnum++;
-                }while (cards.get(index).getRevisit() == false) ;
+                } while (cards.get(index).getRevisit() == false);
                 showRecord();
                 repaint();
             }
@@ -480,7 +491,7 @@ public class DisplayCards extends javax.swing.JFrame {
         } else if (showRevisitsCheck.isSelected() == true && highRevisit != index) {
             int change = 0;
 
-            for (int i = cards.size()-1; i < cards.size(); i--) {
+            for (int i = cards.size() - 1; i < cards.size(); i--) {
                 if (cards.get(i).getRevisit() == true) {
                     index = i;
                     ;
@@ -496,44 +507,46 @@ public class DisplayCards extends javax.swing.JFrame {
     private void randButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randButtonActionPerformed
         // TODO add your handling code here:
         if (showRevisitsCheck.isSelected() == false) {
-        Collections.shuffle(cards);
-        //index = rand.nextInt(cards.size()-1);
-        showRecord();
-        repaint();
-        }
-        else if(showRevisitsCheck.isSelected() == true){
-            do{
             Collections.shuffle(cards);
-            for(int i = 0; i < cards.size(); i++){
-            if(cards.get(i).getRevisit() == true){
-                highRevisit = i;
-            }
-        }
-         for(int i = 0; i < cards.size(); i++){
-            if(cards.get(i).getRevisit() == true){
-               lowRevisit = i;
-               break;
-            }
-        }
-        showRecord();
-        repaint();
-            }while(cards.get(index).getRevisit() == false);//keeps on shuffling until it hits a valid card
+            //index = rand.nextInt(cards.size()-1);
+            showRecord();
+            repaint();
+        } else if (showRevisitsCheck.isSelected() == true) {
+            do {
+                Collections.shuffle(cards);
+                for (int i = 0; i < cards.size(); i++) {
+                    if (cards.get(i).getRevisit() == true) {
+                        highRevisit = i;
+                    }
+                }
+                for (int i = 0; i < cards.size(); i++) {
+                    if (cards.get(i).getRevisit() == true) {
+                        lowRevisit = i;
+                        break;
+                    }
+                }
+                showRecord();
+                repaint();
+            } while (cards.get(index).getRevisit() == false);//keeps on shuffling until it hits a valid card
         }
     }//GEN-LAST:event_randButtonActionPerformed
 
     private void cardPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cardPanelMouseClicked
         // TODO add your handling code here:
-        if ((this.cardInfoLabel.getText()).equals("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>")) {
-            this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getAnswer() + "</p></body></html>");
-            this.sideLabel.setText("Side: Answer");
+        try {
+            if ((this.cardInfoLabel.getText()).equals("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>")) {
+                this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getAnswer() + "</p></body></html>");
+                this.sideLabel.setText("Side: Answer");
 
-        } else if (this.cardInfoLabel.getText().equals("<html><body><p>" + cards.get(index).getAnswer() + "</p></body></html>")) {
-            this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>");
-            this.sideLabel.setText("Side: Question");
+            } else if (this.cardInfoLabel.getText().equals("<html><body><p>" + cards.get(index).getAnswer() + "</p></body></html>")) {
+                this.cardInfoLabel.setText("<html><body><p>" + cards.get(index).getQuestion() + "</p></body></html>");
+                this.sideLabel.setText("Side: Question");
+            }
+
+        } catch (Exception e) {
         }
-        
         repaint();
-         
+
         //force jframe to resize to fix graphics bug
         this.setSize(800, 541);
         this.setSize(800, 540);
@@ -557,36 +570,34 @@ public class DisplayCards extends javax.swing.JFrame {
         int valid = 0;//make sure at least one card can be revisited
         if (revisitCheck.isSelected()) {
             cards.get(index).setRevisit(true);
-              valid++;
+            valid++;
         } else if (!revisitCheck.isSelected()) {
             cards.get(index).setRevisit(false);
             valid--;
         }
-        
-        if(valid > 0){
+
+        if (valid > 0) {
             showRevisitsCheck.setEnabled(true);
-        }
-        else if(valid == 0){
+        } else if (valid == 0) {
             showRevisitsCheck.setEnabled(false);
         }
-        
+
         //make sure user cannot remove last valid card while showing only revisits
-        if(valid == 1 && showRevisitsCheck.isSelected()){
+        if (valid == 1 && showRevisitsCheck.isSelected()) {
             revisitCheck.setEnabled(false);
-        }
-        else if(valid > 1 || !showRevisitsCheck.isSelected()){
+        } else if (valid > 1 || !showRevisitsCheck.isSelected()) {
             revisitCheck.setEnabled(true);
         }
-        
-        for(int i = 0; i < cards.size(); i++){
-            if(cards.get(i).getRevisit() == true){
+
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).getRevisit() == true) {
                 highRevisit = i;
             }
         }
-         for(int i = 0; i < cards.size(); i++){
-            if(cards.get(i).getRevisit() == true){
-               lowRevisit = i;
-               break;
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i).getRevisit() == true) {
+                lowRevisit = i;
+                break;
             }
         }
 
@@ -594,7 +605,7 @@ public class DisplayCards extends javax.swing.JFrame {
 
     private void showRevisitsCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showRevisitsCheckActionPerformed
         // TODO add your handling code here:
-        if(!showRevisitsCheck.isSelected()){
+        if (!showRevisitsCheck.isSelected()) {
             revisitCheck.setEnabled(true);
         }
     }//GEN-LAST:event_showRevisitsCheckActionPerformed
